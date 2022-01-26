@@ -84,3 +84,4 @@ sudo docker-compose -f docker-compose-fluentd.yml up --build
 1. https://www.youtube.com/watch?v=6bXSfjwQVIc
 2. https://medium.com/analytics-vidhya/installing-elk-stack-in-docker-828df335e421
 3. https://logz.io/blog/docker-logging/
+4. https://docs.fluentd.org/v/0.12/container-deployment/docker-compose
