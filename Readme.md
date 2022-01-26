@@ -63,3 +63,24 @@ Send logs to defined port on logstash container using `telnet`:
 telnet localhost 9300
 ```
 Append your messages and you will find your request appending on `http://localhost:5601/app/discover` as well
+
+# How to log containers using fluentd
+1. First off, create `fluentd/Dockerfile` & `fluentd/conf/fluent.conf`
+2. Then, add the following section to all the container that needs to be logged.
+```commandline
+logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: httpd.access
+``` 
+3. Finally run the following command
+
+```
+sudo docker-compose -f docker-compose-fluentd.yml up --build
+```
+
+# References:
+1. https://www.youtube.com/watch?v=6bXSfjwQVIc
+2. https://medium.com/analytics-vidhya/installing-elk-stack-in-docker-828df335e421
+3. https://logz.io/blog/docker-logging/
