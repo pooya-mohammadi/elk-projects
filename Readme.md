@@ -57,3 +57,9 @@ sudo docker run -d -h logstash --name logstash -p 9300:9300 --link elasticsearch
 ```
 sudo docker-compose -f docker-compose-port.yml up 
 ```
+
+Send logs to defined port on logstash container using `telnet`:
+```commandline
+telnet localhost 9300
+```
+Append your messages and you will find your request appending on `http://localhost:5601/app/discover` as well
