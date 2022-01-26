@@ -1,0 +1,68 @@
+version: "3.7"
+
+services:
+  elasticsearch:
+    image: elasticsearch:7.16.3
+    container_name: elasticsearch
+    hostname: elasticsearch
+    restart: always
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - vm_max_map_count=262144
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data-volume:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+  kibana:
+    container_name: kibana
+    image: kibana:7.16.3
+    restart: always
+    hostname: kibana
+    environment:
+      SERVER_NAME: kibana
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    links:
+      - elasticsearch:elasticsearch
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    container_name: logstash
+    image: logstash:7.16.3
+    restart: always
+    hostname: logstash
+    links:
+      - elasticsearch:elasticsearch
+    volumes:
+      - ./logstash:/config-dir
+    ports:
+      - 9300:9300
+    command: -f /config-dir/port-listener.conf
+
+  filebeat:
+    image: elastic/filebeat:7.16.3
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    environment:
+      - LOGSTASH_HOST=logstash.localdomain
+      - LOGSTASH_PORT=5044
+      - SHIPPER_NAME=aWonderfulName
+
+volumes:
+  elasticsearch-data-volume:
+    driver: local
+
