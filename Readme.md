@@ -14,9 +14,8 @@ curl localhost:9200
 ```
 
 ## Check kibana
-```commandline
-curl localhost:5601
-```
+Browse to `localhost:5601`
+
 ## Run logstash for terminal
 ```
 sudo docker run -d -h logstash --name logstash --link elasticsearch:elasticsearch --net elk_default -it --rm -v "$PWD"/logstash:/config-dir logstash:7.16.3 -f /config-dir/terminal-listener.conf
