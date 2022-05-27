@@ -74,10 +74,15 @@ logging:
         fluentd-address: localhost:24224
         tag: httpd.access
 ``` 
-3. Finally run the following command
+3. Finally, run the following command
 
 ```
 sudo docker-compose -f docker-compose-fluentd.yml up --build
+```
+
+# Run APM
+```commandline
+sudo docker-compose -f docker-compose-apm.yml up
 ```
 
 # References:

@@ -1,38 +1,14 @@
-version: '3.7'
+version: "3.7"
 
 services:
-  web:
-    image: httpd
-    ports:
-      - "8085:80"
-    links:
-      - fluentd
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: httpd.access
-
-  fluentd:
-    build: ./fluentd
-    volumes:
-      - ./fluentd/conf:/fluentd/etc
-    links:
-      - "elasticsearch"
-    ports:
-      - "24224:24224"
-      - "24224:24224/udp"
-
   elasticsearch:
-    image: elasticsearch:7.16.3
+    build: ./elasticsearch
     container_name: elasticsearch
     hostname: elasticsearch
-    restart: always
+#    restart: always
     environment:
       - xpack.security.enabled=false
       - discovery.type=single-node
-      - vm_max_map_count=262144
-      - ES_JAVA_OPTS="-Xms750m -Xmx750m"
     ulimits:
       memlock:
         soft: -1
@@ -43,14 +19,15 @@ services:
     cap_add:
       - IPC_LOCK
     volumes:
-      - elasticsearch-data-volume:/usr/share/elasticsearch/data
+      - elasticsearch_data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
+    entrypoint: /usr/local/bin/docker-entrypoint.sh
 
   kibana:
     container_name: kibana
     image: kibana:7.16.3
-    restart: always
+#    restart: always
     hostname: kibana
     environment:
       SERVER_NAME: kibana
@@ -62,6 +39,6 @@ services:
     depends_on:
       - elasticsearch
 
+
 volumes:
-  elasticsearch-data-volume:
-    driver: local
+  elasticsearch_data:
