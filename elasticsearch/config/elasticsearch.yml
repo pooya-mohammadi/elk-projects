@@ -1,0 +1,4 @@
+
+cluster.name: "elastic_projects"
+network.host: 0.0.0.0
+node.name: "curd_node"
